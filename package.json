@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "cf-login": "contentful login",
-    "cf-export": "contentful space export --config contentful/export-config.json --management-token PF41NsVshA7LqKU2EuQ-dURS42uo5Nq4P-LWKqkE7AM --space-id 'tbi9dgrti0tp'",
+    "cf-export": "contentful space export --config contentful/export-config.json --management-token $MGMT_TOKEN --space-id $SPACE_ID",
     "cf-generate-types": "cf-content-types-generator contentful/export.json --out contentful/contentfulTypes"
   },
   "dependencies": {
