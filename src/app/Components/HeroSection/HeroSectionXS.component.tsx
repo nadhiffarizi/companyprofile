@@ -1,21 +1,24 @@
 import * as React from "react";
 import Image from "next/image";
-
-export function HeroSectionXS() {
+import { EntryCollection } from "contentful";
+import { TypeSaasdeskFields } from "../../../../contentful/contentfulTypes";
+export function HeroSectionXS({
+  data,
+}: {
+  data: EntryCollection<TypeSaasdeskFields, undefined, string> | undefined;
+}) {
   return (
     <div>
       <div className="w-full bg-[#D0F8FE]">
         <div className="flex flex-col mx-7 h-full ">
           <h1 className="text-maintextcolor tracking-wide text-[2.3rem] mt-24">
             {" "}
-            {/**Main Headline */} All-in-one Payroll and HR System for small
-            team
+            {/**Main Headline */} {data?.items[0].fields.companyheadline}
           </h1>
           <h2 className="text-lg text-secondarycolor tracking-wide leading-loose mt-3">
             {" "}
             {/**Sub Headline */}
-            Helping them establish efficient HR operations, manage growing
-            teams, and stay compliant
+            {data?.items[0].fields.description}
           </h2>
           <div className="flex flex-col justify-start items-start gap-2 h-[120px]  mt-5">
             {" "}

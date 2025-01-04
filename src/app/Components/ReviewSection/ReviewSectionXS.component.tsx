@@ -8,13 +8,17 @@ import {
   CarouselItem,
 } from "@/components/ui/carousel";
 import { type CarouselApi } from "@/components/ui/carousel";
+import getCompanyData from "../../../../utils/getCompanyData";
+import { useEffect, useState } from "react";
+import IReview from "@/interface/review.interface";
 
 export function ReviewSectionXS() {
   const [api, setApi] = React.useState<CarouselApi>();
   const [current, setCurrent] = React.useState(0);
-  const [count, setCount] = React.useState(0);
+  const [_, setCount] = React.useState(0);
+  const [reviews, setReviews] = useState<IReview[]>();
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!api) {
       return;
     }
@@ -26,6 +30,23 @@ export function ReviewSectionXS() {
       setCurrent(api.selectedScrollSnap());
     });
   }, [api]);
+
+  useEffect(() => {
+    const getData = async () => {
+      const data = await getCompanyData();
+      return data;
+    };
+
+    const response = getData();
+    response.then((res) => {
+      const resString = JSON.stringify(res?.items[0].fields.review);
+      const resJSON = JSON.parse(resString);
+      // console.log(resJSON["reviews"][0]);
+      if (resJSON) {
+        setReviews(resJSON["reviews"]);
+      }
+    });
+  }, []);
 
   return (
     <div className="flex w-full bg-[#2B2B46]">
@@ -40,15 +61,22 @@ export function ReviewSectionXS() {
         <div className="w-full h-full ">
           <Carousel className="w-full" setApi={setApi} opts={{ loop: true }}>
             <CarouselContent>
-              <CarouselItem>
-                <ReviewCardXS />
-              </CarouselItem>
-              <CarouselItem>
-                <ReviewCardXS />
-              </CarouselItem>
-              <CarouselItem>
-                <ReviewCardXS />
-              </CarouselItem>
+              {reviews?.map((review: IReview, index: number) => {
+                const tempData: IReview = {
+                  id: review["id"],
+                  name: review["name"],
+                  role: review["role"],
+                  title: review["title"],
+                  message: review["message"],
+                  imgUrl: review["imgUrl"],
+                };
+
+                return (
+                  <CarouselItem key={index}>
+                    <ReviewCardXS review={tempData} />
+                  </CarouselItem>
+                );
+              })}
             </CarouselContent>
           </Carousel>
         </div>

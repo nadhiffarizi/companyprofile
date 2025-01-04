@@ -2,8 +2,14 @@ import * as React from "react";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { TeamsXS } from "../Teams/TeamsXS.component";
+import { EntryCollection } from "contentful";
+import { TypeSaasdeskFields } from "../../../../contentful/contentfulTypes";
 
-export function AboutXS() {
+export function AboutXS({
+  data,
+}: {
+  data: EntryCollection<TypeSaasdeskFields, undefined, string> | undefined;
+}) {
   return (
     <div className="w-full bg-[#F9FDE6]">
       {/**Main div */}
@@ -16,14 +22,12 @@ export function AboutXS() {
           </div>
           <div className="flex justify-start items-start w-full h-[200px] py-5">
             <h1 className="text-maintextcolor tracking-wide text-[2.3rem] ">
-              Automate payroll processing, tax calculations
+              {data?.items[0].fields.companyheadline}
             </h1>
           </div>
           <div className="w-full h-[250px] py-7 ">
             <p className="text-lg text-secondarycolor tracking-wide leading-9 ">
-              Saasland HR provides cost-effective HR solutions for startups and
-              SMBs. helping them establish efficient HR operations, manage
-              growing teams.
+              {data?.items[0].fields.description}
             </p>
           </div>
         </div>
@@ -49,9 +53,7 @@ export function AboutXS() {
           </div>
           <div className="w-full h-[250px] ">
             <p className="text-lg text-secondarycolor tracking-wide leading-9 ">
-              Saasland HR provides cost-effective HR solutions for startups and
-              SMBs. helping them establish efficient HR operations, manage
-              growing teams.
+              {data?.items[0].fields.description}
             </p>
           </div>
         </div>

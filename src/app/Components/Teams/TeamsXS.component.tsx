@@ -8,11 +8,15 @@ import {
   CarouselItem,
 } from "@/components/ui/carousel";
 import { type CarouselApi } from "@/components/ui/carousel";
+import { useEffect, useState } from "react";
+import getCompanyData from "../../../../utils/getCompanyData";
+import ITeamMember from "@/interface/teamMember.interface";
 
 export function TeamsXS() {
-  const [api, setApi] = React.useState<CarouselApi>();
-  const [current, setCurrent] = React.useState(0);
-  const [count, setCount] = React.useState(0);
+  const [api, setApi] = useState<CarouselApi>();
+  const [current, setCurrent] = useState(0);
+  const [count, setCount] = useState(0);
+  const [teamMembers, setTeamMembers] = useState<ITeamMember[]>();
 
   React.useEffect(() => {
     if (!api) {
@@ -27,8 +31,25 @@ export function TeamsXS() {
     });
   }, [api]);
 
+  useEffect(() => {
+    const getData = async () => {
+      const data = await getCompanyData();
+      return data;
+    };
+
+    const response = getData();
+    response.then((res) => {
+      const resString = JSON.stringify(res?.items[0].fields.team);
+      const resJSON = JSON.parse(resString);
+      console.log(resJSON["member"]);
+      if (resJSON) {
+        setTeamMembers(resJSON["member"]);
+      }
+    });
+  }, []);
+
   return (
-    <div className="flex flex-col w-full px-7 h-full bg-[#F4D4EB]">
+    <div className="flex flex-col px-5 w-full h-full  ">
       <div className=" flex w-full h-[120px] items-end justify-center pb-10  ">
         {" "}
         {/**Div title */}
@@ -39,15 +60,22 @@ export function TeamsXS() {
       <div className="w-full h-full ">
         <Carousel className="w-full" setApi={setApi} opts={{ loop: true }}>
           <CarouselContent>
-            <CarouselItem>
-              <CardTeamsXS />
-            </CarouselItem>
-            <CarouselItem>
-              <CardTeamsXS />
-            </CarouselItem>
-            <CarouselItem>
-              <CardTeamsXS />
-            </CarouselItem>
+            {teamMembers?.map((member: ITeamMember, index: number) => {
+              const tempData: ITeamMember = {
+                id: member["id"],
+                name: member["name"],
+                role: member["role"],
+                title: member["title"],
+                message: member["message"],
+                imgUrl: member["imgUrl"],
+              };
+
+              return (
+                <CarouselItem key={index}>
+                  <CardTeamsXS member={tempData} />
+                </CarouselItem>
+              );
+            })}
           </CarouselContent>
         </Carousel>
       </div>
